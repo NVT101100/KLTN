@@ -23,6 +23,8 @@ unsigned long lastMsg = 0;
 char msg[MSG_BUFFER_SIZE];
 int value = 0;
 byte sendcode[5];
+byte receivecode[4];
+int indx = 0;
 
 void setup_wifi() {
   delay(10);
@@ -40,7 +42,7 @@ void setup_wifi() {
     delay(500);
     //Serial.print(".");
     n++;
-    if(n>10) break;
+    if(n>8) break;
   }
   i++;
  }
@@ -107,6 +109,7 @@ void reconnect() {
       // … and resubscribe
       client->subscribe("TV/Samsung");
       client->subscribe("Fan/Samsung");
+      client->subscribe("Learn");
     } else {
       //Serial.print("failed, rc = ");
       //Serial.print(client->state());
@@ -152,10 +155,36 @@ void setup() {
   client->setServer(mqtt_server, 8883);
   client->setCallback(callback);
 }
+char* toCharArray(String str) {
+  return &str[0];
+}
+
+void convertCode(){
+  String hexString = "";
+  for(int i=0;i<4;i++){
+    if(receivecode[i] < 0x10){
+      hexString += '0';
+    }
+    hexString +=String(receivecode[i],HEX);
+  }
+  client->publish("Learn",toCharArray(hexString));
+  Serial.println(hexString);
+}
 
 void loop() {
   if (!client->connected()) {
     reconnect();
   }
   client->loop();
+  if(Serial.available() > 0){
+    if(indx < 4){
+      receivecode[indx] = Serial.read();
+      indx++;
+    }
+  }
+  if(indx == 4) {
+      indx = 0;
+      convertCode();
+  }
+
 }
