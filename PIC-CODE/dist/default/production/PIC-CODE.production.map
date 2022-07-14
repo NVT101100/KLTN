@@ -55,6 +55,22 @@ c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(crt_
                               (__crt_start_mode_normal)
 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(delay32da.Leo)
                               build/default/production/test.o (___delay32)
+c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(fixunssfsi.daeo)
+                              build/default/production/test.o (___fixunssfsi)
+c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(floatunsisf.daeo)
+                              build/default/production/test.o (___floatunsisf)
+c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(funpack.daeo)
+                              c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(fixunssfsi.daeo) (__funpack)
+c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(mulsf3.daeo)
+                              build/default/production/test.o (___mulsf3)
+c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(floatundisf.daeo)
+                              c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(floatunsisf.daeo) (___floatundisf)
+c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(fpack.daeo)
+                              c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(mulsf3.daeo) (__fpack)
+c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(funpack2.daeo)
+                              c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(mulsf3.daeo) (__funpack2)
+c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(futil.daeo)
+                              c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(mulsf3.daeo) (__fPropagateNaN)
 
 
 xc16-ld 1.50 (B)
@@ -67,12 +83,12 @@ Default Scalar Model: Small
 
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
-.text                        0x100               0x274           0x3ae  (942)
-.text                        0x374                0x80            0xc0  (192)
-.init.delay32                0x3f4                0x1c            0x2a  (42)
-.dinit                       0x410                 0x8             0xc  (12)
+.text                        0x100               0x456           0x681  (1665)
+.text                        0x556               0x2cc           0x432  (1074)
+.init.delay32                0x822                0x1c            0x2a  (42)
+.dinit                       0x83e                 0x8             0xc  (12)
 
-                 Total "program" memory used (bytes):          0x4a4  (1188) <1%
+                 Total "program" memory used (bytes):          0xae9  (2793) <1%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x8000]
@@ -103,11 +119,11 @@ External Symbols in Data Memory (by address):
                     0x0802                  _nec_ok
                     0x0804                  _timer_value
                     0x0806                  _nec_code
-                    0x080a                  _Timer1_flag
+                    0x080a                  _TMR1stop
 
 External Symbols in Data Memory (by name):
 
-                    0x080a                  _Timer1_flag
+                    0x080a                  _TMR1stop
                     0x0801                  _bit_n
                     0x0806                  _nec_code
                     0x0802                  _nec_ok
@@ -118,31 +134,73 @@ External Symbols in Program Memory (by address):
 
                   0x000100                  __resetPRI
                   0x00013c                  __psv_init
-                  0x000152                  __data_init_da
                   0x000152                  __data_init
-                  0x000204                  __IOCInterrupt
-                  0x00036e                  __DefaultInterrupt
-                  0x000374                  _reset_timer
-                  0x00037c                  _Timer1_init
-                  0x0003a0                  _Timer1_Start
-                  0x0003a8                  _Timer1_Stop
-                  0x0003b0                  _main
-                  0x0003f4                  ___delay32
+                  0x000152                  __data_init_da
+                  0x000204                  __T2Interrupt
+                  0x000228                  __T1Interrupt
+                  0x000242                  __IOCInterrupt
+                  0x0003aa                  __DefaultInterrupt
+                  0x0003b0                  ___fixunssfsi
+                  0x0003e6                  ___floatunsisf
+                  0x0003ea                  __funpack
+                  0x000414                  ___mulsf3
+                  0x00047c                  ___floatundisf
+                  0x0004da                  __fpack
+                  0x000526                  __funpack2
+                  0x000536                  __fPropagateNaN
+                  0x000548                  __fbopExit
+                  0x000550                  __fbopReturnNaN
+                  0x000556                  _reset_timer
+                  0x00055e                  _Timer1_init
+                  0x000580                  _Timer1_Start
+                  0x000588                  _Timer1_Stop
+                  0x000590                  _delay
+                  0x0005a6                  _disableISR
+                  0x0005b8                  _enableISR
+                  0x0005ca                  _ADC_init
+                  0x000600                  _ADC_Read
+                  0x000642                  _space
+                  0x00066e                  _PulseOut
+                  0x0006b2                  _sendVI
+                  0x00076c                  _sendADC
+                  0x0007a2                  _main
+                  0x000822                  ___delay32
 
 External Symbols in Program Memory (by name):
 
-                  0x0003a0                  _Timer1_Start
-                  0x0003a8                  _Timer1_Stop
-                  0x00037c                  _Timer1_init
-                  0x00036e                  __DefaultInterrupt
-                  0x000204                  __IOCInterrupt
-                  0x0003f4                  ___delay32
+                  0x000600                  _ADC_Read
+                  0x0005ca                  _ADC_init
+                  0x00066e                  _PulseOut
+                  0x000580                  _Timer1_Start
+                  0x000588                  _Timer1_Stop
+                  0x00055e                  _Timer1_init
+                  0x0003aa                  __DefaultInterrupt
+                  0x000242                  __IOCInterrupt
+                  0x000228                  __T1Interrupt
+                  0x000204                  __T2Interrupt
+                  0x000822                  ___delay32
+                  0x0003b0                  ___fixunssfsi
+                  0x00047c                  ___floatundisf
+                  0x0003e6                  ___floatunsisf
+                  0x000414                  ___mulsf3
                   0x000152                  __data_init
                   0x000152                  __data_init_da
+                  0x000536                  __fPropagateNaN
+                  0x000548                  __fbopExit
+                  0x000550                  __fbopReturnNaN
+                  0x0004da                  __fpack
+                  0x0003ea                  __funpack
+                  0x000526                  __funpack2
                   0x00013c                  __psv_init
                   0x000100                  __resetPRI
-                  0x0003b0                  _main
-                  0x000374                  _reset_timer
+                  0x000590                  _delay
+                  0x0005a6                  _disableISR
+                  0x0005b8                  _enableISR
+                  0x0007a2                  _main
+                  0x000556                  _reset_timer
+                  0x00076c                  _sendADC
+                  0x0006b2                  _sendVI
+                  0x000642                  _space
 
 Memory Configuration
 
@@ -191,7 +249,7 @@ LOAD c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libfx-elf.a
                   0x000002          0x2 SHORT 0x0 ((ABSOLUTE (__reset) >> 0x10) & 0x7f)
                   0x000003          0x2 SHORT 0x0
 
-.text             0x000100        0x274
+.text             0x000100        0x456
  *(.init)
  .init            0x000100         0x4c c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
                   0x000100                  __resetPRI
@@ -203,18 +261,47 @@ LOAD c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libfx-elf.a
  *(.user_init)
  *(.handle)
  *(.isr*)
- .isr.text        0x000204        0x16a build/default/production/test.o
-                  0x000204                  __IOCInterrupt
- .isr             0x00036e          0x4 default_isr
-                  0x00036e                  __DefaultInterrupt
+ .isr.text        0x000204        0x1a6 build/default/production/test.o
+                  0x000204                  __T2Interrupt
+                  0x000228                  __T1Interrupt
+                  0x000242                  __IOCInterrupt
+ .isr             0x0003aa          0x4 default_isr
+                  0x0003aa                  __DefaultInterrupt
  *(.libc)
  *(.libm)
  *(.libdsp)
  *(.lib*)
  .libpic30_crt_start_mode
-                  0x000372          0x2 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normalda.Leo)
-                  0x000372                  __crt_start_mode
-                  0x000372                  __crt_start_mode_normal
+                  0x0003ae          0x2 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normalda.Leo)
+                  0x0003ae                  __crt_start_mode
+                  0x0003ae                  __crt_start_mode_normal
+ .libm.fixunssfsi
+                  0x0003b0         0x36 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(fixunssfsi.daeo)
+                  0x0003b0                  ___fixunssfsi
+ .libm.floatunsisf
+                  0x0003e6          0x4 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(floatunsisf.daeo)
+                  0x0003e6                  ___floatunsisf
+ .libm.funpack    0x0003ea         0x2a c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(funpack.daeo)
+                  0x0003ea                  __funpack
+ .libm.mulsf3     0x000414         0x68 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(mulsf3.daeo)
+                  0x000414                  ___mulsf3
+ .libm.floatundisf
+                  0x00047c         0x5e c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(floatundisf.daeo)
+                  0x00047c                  ___floatundisf
+ .libm.fpack      0x0004da         0x4c c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(fpack.daeo)
+                  0x0004da                  __fpack
+ .libm.funpack2
+                  0x000526         0x10 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(funpack2.daeo)
+                  0x000526                  __funpack2
+ .libm.fPropagateNaN
+                  0x000536         0x12 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(futil.daeo)
+                  0x000536                  __fPropagateNaN
+ .libm.fbobExit
+                  0x000548          0x8 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(futil.daeo)
+                  0x000548                  __fbopExit
+ .libm.fbopReturnNaN
+                  0x000550          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(futil.daeo)
+                  0x000550                  __fbopReturnNaN
 
 usercode
  *(usercode)
@@ -252,26 +339,26 @@ __FDEVOPT1
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x145f
+.debug_info       0x000000       0x23fa
  *(.debug_info)
- .debug_info      0x000000       0x145f build/default/production/test.o
+ .debug_info      0x000000       0x23fa build/default/production/test.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x157
+.debug_abbrev     0x000000        0x1b6
  *(.debug_abbrev)
- .debug_abbrev    0x000000        0x157 build/default/production/test.o
+ .debug_abbrev    0x000000        0x1b6 build/default/production/test.o
 
-.debug_line       0x000000        0x164
+.debug_line       0x000000        0x1eb
  *(.debug_line)
- .debug_line      0x000000        0x164 build/default/production/test.o
+ .debug_line      0x000000        0x1eb build/default/production/test.o
 
-.debug_frame      0x000000         0xd4
+.debug_frame      0x000000        0x20e
  *(.debug_frame)
- .debug_frame     0x000000         0xd4 build/default/production/test.o
+ .debug_frame     0x000000        0x20e build/default/production/test.o
 
-.debug_str        0x000000         0x94
+.debug_str        0x000000         0xf0
  *(.debug_str)
- .debug_str       0x000000         0x94 build/default/production/test.o
+ .debug_str       0x000000         0xf0 build/default/production/test.o
 
 .debug_loc
  *(.debug_loc)
@@ -280,10 +367,10 @@ __FDEVOPT1
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000         0xbe
+                  0x000000        0x14c
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000         0xbe build/default/production/test.o
+                  0x000000        0x14c build/default/production/test.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -2397,20 +2484,36 @@ LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x000018        0x1a6
+                  0x000018        0x287
  .debug_pubtypes
-                  0x000018        0x1a6 build/default/production/test.o
+                  0x000018        0x287 build/default/production/test.o
 
 __c30_signature
-                  0x0001be         0x18
+                  0x00029f         0x48
  __c30_signature
-                  0x0001be          0x6 build/default/production/test.o
+                  0x00029f          0x6 build/default/production/test.o
  __c30_signature
-                  0x0001c4          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
+                  0x0002a5          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
  __c30_signature
-                  0x0001ca          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
+                  0x0002ab          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
  __c30_signature
-                  0x0001d0          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(delay32da.Leo)
+                  0x0002b1          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(delay32da.Leo)
+ __c30_signature
+                  0x0002b7          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(fixunssfsi.daeo)
+ __c30_signature
+                  0x0002bd          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(floatunsisf.daeo)
+ __c30_signature
+                  0x0002c3          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(funpack.daeo)
+ __c30_signature
+                  0x0002c9          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(mulsf3.daeo)
+ __c30_signature
+                  0x0002cf          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(floatundisf.daeo)
+ __c30_signature
+                  0x0002d5          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(fpack.daeo)
+ __c30_signature
+                  0x0002db          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(funpack2.daeo)
+ __c30_signature
+                  0x0002e1          0x6 c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\libm-elf.a(futil.daeo)
 
 .nbss               0x0800          0xc
  .nbss              0x0800          0xc build/default/production/test.o
@@ -2419,7 +2522,7 @@ __c30_signature
                     0x0802                  _nec_ok
                     0x0804                  _timer_value
                     0x0806                  _nec_code
-                    0x080a                  _Timer1_flag
+                    0x080a                  _TMR1stop
 
 .config_BTSWP     0x0abf28          0x2
  .config_BTSWP    0x0abf28          0x2 build/default/production/test.o
@@ -2434,22 +2537,41 @@ __c30_signature
 .config_IESO      0x0abf18          0x2
  .config_IESO     0x0abf18          0x2 build/default/production/test.o
 
+.ivt._T2Interrupt
+                  0x000022          0x2
+ .ivt._T2Interrupt
+                  0x000022          0x2 build/default/production/test.o
+
+.ivt._T1Interrupt
+                  0x00001a          0x2
+ .ivt._T1Interrupt
+                  0x00001a          0x2 build/default/production/test.o
+
 .ivt._IOCInterrupt
                   0x00003a          0x2
  .ivt._IOCInterrupt
                   0x00003a          0x2 build/default/production/test.o
 
-.text             0x000374         0x80
- .text            0x000374         0x80 build/default/production/test.o
-                  0x000374                  _reset_timer
-                  0x00037c                  _Timer1_init
-                  0x0003a0                  _Timer1_Start
-                  0x0003a8                  _Timer1_Stop
-                  0x0003b0                  _main
+.text             0x000556        0x2cc
+ .text            0x000556        0x2cc build/default/production/test.o
+                  0x000556                  _reset_timer
+                  0x00055e                  _Timer1_init
+                  0x000580                  _Timer1_Start
+                  0x000588                  _Timer1_Stop
+                  0x000590                  _delay
+                  0x0005a6                  _disableISR
+                  0x0005b8                  _enableISR
+                  0x0005ca                  _ADC_init
+                  0x000600                  _ADC_Read
+                  0x000642                  _space
+                  0x00066e                  _PulseOut
+                  0x0006b2                  _sendVI
+                  0x00076c                  _sendADC
+                  0x0007a2                  _main
 
-.init.delay32     0x0003f4         0x1c
- .init.delay32    0x0003f4         0x1c c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(delay32da.Leo)
-                  0x0003f4                  ___delay32
+.init.delay32     0x000822         0x1c
+ .init.delay32    0x000822         0x1c c:/program files/microchip/xc16/v1.50/bin/bin/../../lib\liblega-pic30-elf.a(delay32da.Leo)
+                  0x000822                  ___delay32
 
-.dinit            0x000410          0x8
- .dinit           0x000410          0x8 data_init
+.dinit            0x00083e          0x8
+ .dinit           0x00083e          0x8 data_init

@@ -1,3 +1,4 @@
+#include <IRremote.hpp>
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <time.h>
@@ -5,10 +6,38 @@
 #include <FS.h>
 #include <LittleFS.h>
 #include <CertStoreBearSSL.h>
+#include <stdlib.h>
+#include <stdint.h>
+
+#define IR_TRANS_PIN D2
+#define IR_RECV_PIN D3
+IRsend irsend(IR_TRANS_PIN);
+IRrecv irrecv(IR_RECV_PIN);
+decode_results results;
 
 // Update these with values suitable for your network.
-const char* ssid[] = {"G5_3766","Nguyen Van Thien"};
-const char* password[] = {"012345679","thien1993@"};
+const char* ssid[] = {"Redmi 10C","G5_3766","Nguyen Van Thien","Little Penguin","Phong 314"};
+const char* password[] = {"19tuxuong","012345679","thien1993@","khongcopass","0394998532"};
+const char* IRprotocol[] = {"UNKNOWN","PULSE_DISTANCE","PULSE_WIDTH","DENON","DISH","JVC","LG",
+    "LG2",
+    "NEC",
+    "PANASONIC",
+    "KASEIKYO",
+    "KASEIKYO_JVC",
+    "KASEIKYO_DENON",
+    "KASEIKYO_SHARP",
+    "KASEIKYO_MITSUBISHI",
+    "RC5",
+    "RC6",
+    "SAMSUNG",
+    "SHARP",
+    "SONY",
+    "ONKYO",
+    "APPLE",
+    "BOSEWAVE",
+    "LEGO_PF",
+    "MAGIQUEST",
+    "WHYNTER"};
 const char* mqtt_server = "fd3b3ad84b6246349a56fabb5dfbc4dc.s1.eu.hivemq.cloud";
 
 // A single, global CertStore which can be used by all connections.
@@ -18,41 +47,34 @@ BearSSL::CertStore certStore;
 
 WiFiClientSecure espClient;
 PubSubClient * client;
-unsigned long lastMsg = 0;
-#define MSG_BUFFER_SIZE (500)
-char msg[MSG_BUFFER_SIZE];
-int value = 0;
-byte sendcode[5];
-byte receivecode[4];
-int indx = 0;
+uint8_t * receive_buffer;
+
 
 void setup_wifi() {
   delay(10);
   int i = 0;
   // We start by connecting to a WiFi network
-  //Serial.println();
-//  Serial.print("Connecting to ");
- // Serial.println(ssid);
  while(WiFi.status() != WL_CONNECTED){
   int n = 0;
   WiFi.mode(WIFI_STA);
-  if(i < sizeof(ssid)/2) WiFi.begin(ssid[i], password[i]);
+  if(i < sizeof(ssid)/4){
+    WiFi.begin(ssid[i], password[i]);
+    String s = "Connecting to "+String(ssid[i]);
+    Serial.print(s);
+  }
+  else i = 0;
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    //Serial.print(".");
+    Serial.print(".");
     n++;
-    if(n>8) break;
+    if(n>10) break;
   }
   i++;
  }
-
+ String s = "Connected to "+String(ssid[i-1]);
+   Serial.println(s);
   randomSeed(micros());
-
-  //Serial.println("");
-  //Serial.println("WiFi connected");
-  //Serial.println("IP address: ");
-  //Serial.println(WiFi.localIP());
 }
 
 
@@ -77,21 +99,12 @@ void setDateTime() {
 
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  //Serial.print("Message arrived [");
-  //Serial.print(topic);
-  //Serial.print("] ");
-  String hexChar = "";
-  for (int i = 0; i < length; i++) {
-     hexChar += String((char)payload[i]);
+  receive_buffer = (uint8_t*)realloc(receive_buffer,(length-1)*sizeof(uint8_t));
+  for (int i = 1; i < length; i++) {
+     receive_buffer[i-1] = (uint8_t) payload[i];
+     Serial.println(receive_buffer[i-1]);
   }
-  uint16_t code = (uint16_t) strtol(hexChar.c_str(),NULL,0);
-  sendcode[0] = 0xA1;
-  sendcode[3] = code & 0xff;
-  sendcode[2] = (code >> 8) & 0xff;
-  sendcode[4] = 0x00;
-  Serial.write(sendcode,5);
-  //Serial.println("received");
-  
+  irsend.sendRaw_P(receive_buffer,length-1,38);
 }
 
 
@@ -107,9 +120,10 @@ void reconnect() {
       // Once connected, publish an announcement…
       //client->publish("Topic", "msg");
       // … and resubscribe
-      client->subscribe("TV/Samsung");
-      client->subscribe("Fan/Samsung");
-      client->subscribe("Learn");
+      client->subscribe("TV");
+      client->subscribe("Fan");
+      client->subscribe("Customs");
+      //client->subscribe("Learn");
     } else {
       //Serial.print("failed, rc = ");
       //Serial.print(client->state());
@@ -126,7 +140,8 @@ void setup() {
   delay(500);
   // When opening the Serial Monitor, select 9600 Baud
   Serial.begin(9600);
-  sendcode[1] = 0xF1;
+  irrecv.enableIRIn();
+  //sendcode[1] = 0xF1;
   //Serial1.begin(9600);
   delay(500);
 
@@ -155,20 +170,28 @@ void setup() {
   client->setServer(mqtt_server, 8883);
   client->setCallback(callback);
 }
-char* toCharArray(String str) {
-  return &str[0];
-}
 
-void convertCode(){
-  String hexString = "";
-  for(int i=0;i<4;i++){
-    if(receivecode[i] < 0x10){
-      hexString += '0';
+void sendUI(uint8_t *code_buffer)
+{
+  uint16_t vol = 0;
+  uint16_t amp = 0;
+  int bit_cnt = 0;
+  for(int i = 4; i <= 68; i+=2)
+  {
+    if(bit_cnt < 16)
+    {
+      if(code_buffer[i] < 0xf && code_buffer[i+1] < 0xf) amp = amp | (0 << bit_cnt);
+      else amp = amp | (1 << bit_cnt);
     }
-    hexString +=String(receivecode[i],HEX);
+    else 
+    {
+      if(code_buffer[i] < 0xf && code_buffer[i+1] < 0xf) vol = vol | (0 << (bit_cnt - 16));
+      else vol = vol | (1 << (bit_cnt - 16));
+    }
+    bit_cnt++;
   }
-  client->publish("Learn",toCharArray(hexString));
-  Serial.println(hexString);
+  String detail = "Device detail: "+String(vol)+" milivol, "+String(amp)+" miliamperre, "+String(vol*amp)+" microWatt.";
+  Serial.println(detail);
 }
 
 void loop() {
@@ -176,15 +199,22 @@ void loop() {
     reconnect();
   }
   client->loop();
-  if(Serial.available() > 0){
-    if(indx < 4){
-      receivecode[indx] = Serial.read();
-      indx++;
+  uint64_t value = 0;
+  if (irrecv.decode(&results)){
+    //Serial.println(IRprotocol[results.decode_type]);
+    //if(results.rawlen > 6) decode_more_64bit(results);
+      uint8_t * code_buffer = (uint8_t*)malloc(results.rawlen*sizeof(uint8_t));
+     for(int i = 0;i<results.rawlen;i++)
+     {
+        code_buffer[i] = results.rawbuf[i] & 0xff;
+        Serial.println(code_buffer[i]);
+     }
+    if(code_buffer[3] > 200) sendUI(code_buffer);
+    else
+    {
+    Serial.println(IRprotocol[results.decode_type]);
+    client->publish("Learn",code_buffer,(int)results.rawlen);
     }
+    irrecv.resume();
   }
-  if(indx == 4) {
-      indx = 0;
-      convertCode();
-  }
-
 }
