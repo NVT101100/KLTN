@@ -192,6 +192,7 @@ void sendUI(uint8_t *code_buffer)
   }
   String detail = "Device detail: "+String(vol)+" milivol, "+String(amp)+" miliamperre, "+String(vol*amp)+" microWatt.";
   Serial.println(detail);
+  client->publish("DETAIL",&detail[0]);
 }
 
 void loop() {
