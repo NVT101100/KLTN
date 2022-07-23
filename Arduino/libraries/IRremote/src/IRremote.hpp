@@ -136,9 +136,9 @@
  */
 #if !defined(RAW_BUFFER_LENGTH)
 #  if defined(DECODE_MAGIQUEST)
-#define RAW_BUFFER_LENGTH  500 // MagiQuest requires 112 bytes.
+#define RAW_BUFFER_LENGTH  2048 // MagiQuest requires 112 bytes.
 #  else
-#define RAW_BUFFER_LENGTH  500  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
+#define RAW_BUFFER_LENGTH  2048  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
 //#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
 #  endif
 #endif

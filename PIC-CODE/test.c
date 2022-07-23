@@ -15,7 +15,7 @@ volatile uint8_t nec_ok = 0;
 volatile uint16_t timer_value;
 volatile uint32_t nec_code;
 volatile uint8_t TMR1stop;
-
+volatile int power;
 //void __attribute__((__interrupt__, auto_psv)) _T1Interrupt(void){
     //IFS0bits.T1IF =0;       // reset the interrupt flag
    // TMR1 = 0;
@@ -119,12 +119,13 @@ void space(int time)
     TMR1stop = 0;
     PORTDbits.RD2 = 0;
     T1CON = 0x8000;
+    
     while(TMR1stop == 0);
 }
 
 void PulseOut(int time)
 {
-    PORTDbits.RD2 = 0;
+    PORTDbits.RD2 = 1;
     T1CONbits.TON = 0; // Start/Stop bit - Stop Timer
     //T1CONbits.TCKPS = 0x0; // Timer prescaler 1:256
     //T1CONbits.TCS = 0x00; // Using FOSC/2 
@@ -139,13 +140,13 @@ void PulseOut(int time)
     OC3RS = 0x0069; // Initialize Secondary Compare Register1 with 0x0026
     OC3CON1 = 0x6; // Load new compare mode to OC1CON
     OC3CON2 = 0xC;*/
-    PR2 = 0x67; // Initialize PR2 with 0x004C
+    PR2 = 0x48; // Initialize PR2 with 0x004C
     //T2CONbits.TCS = 0x00;
     IPC1bits.T2IP = 1; // Setup Output Compare 1 interrupt for
     IFS0bits.T2IF = 0; // Clear Output Compare 1 interrupt flag
     IEC0bits.T2IE = 1; // Enable Output Compare 1 interrupts
     //T2CONbits.TCKPS = 0x03; // Timer prescaler 1:256
-    T2CONbits.TCS = 0x00; // Using FOSC/2 
+    //T2CONbits.TCS = 0x00; // Using FOSC/2 
     T1CON = 0x8000;
     T2CON = 0x8000; // Start Timer2 with assumed settings
     while(TMR1stop == 0);
@@ -164,6 +165,7 @@ void __attribute__ ((interrupt,no_auto_psv)) _T1Interrupt(void)
     IFS0bits.T1IF = 0;
     IEC0bits.T2IE = 0;
     //OC3CON1 = 0x0000;
+    PORTDbits.RD2 = 0;
     T2CON = 0;
     T1CON = 0;
     TMR1 = 0;
@@ -179,18 +181,21 @@ void sendVI(uint16_t V, uint16_t I)
     {
         if(i == 0) PulseOut(0x8C9F);
         else if (i == 1) space(0x464F);
-        else if( i == 2) PulseOut(0x9C3F);
+        else if( i == 2) {
+            PulseOut(0x9C3F);
+            space(0x8D5);
+        }
         else if (i == 35) PulseOut(0x8D5);
         else if ((VI & 0x1) == 0)
         {
             PulseOut(0x8D5);
-            space(0x8D5);
+            space(0x8D3);
             VI = VI >> 1;
         }
         else 
         {
             PulseOut(0x8D5);
-            space(0x11AA);
+            space(0x11A8);
             VI = VI >> 1;
         }
         i++;
@@ -218,28 +223,23 @@ int main() { // Main function
     Timer1_init();
     enableISR();
     ADC_init();
-    int power;
     PORTDbits.RD6 = 1;
     PORTDbits.RD2 = 0;
     while (1) { // Endless Loop
         nec_state = 0;
         while (nec_ok == 0) {
-            PORTAbits.RA0 = power;
-            //if(nec_code == 0x12345678) sendADC();
-            if(!PORTDbits.RD6) {
-                sendADC();
-                enableISR();
-            }
+            PORTAbits.RA2 = power;
         }
         bit_n = 0;
         nec_state = 5;
         switch(nec_code){
-            case 0x12345678: {
+            case 0x00ff30cf: {
+                __delay_ms(500);
                 sendADC();
                 enableISR();
                 break;
             }
-            case 0x0fd5486b:{
+            case 0x00ff6897:{
                 power = ~power;
                 break;
             }

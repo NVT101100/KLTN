@@ -57,20 +57,22 @@ void setup_wifi() {
  while(WiFi.status() != WL_CONNECTED){
   int n = 0;
   WiFi.mode(WIFI_STA);
-  if(i < sizeof(ssid)/4){
+  
     WiFi.begin(ssid[i], password[i]);
     String s = "Connecting to "+String(ssid[i]);
     Serial.print(s);
-  }
-  else i = 0;
+  
+ 
 
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED && n < 11) {
     delay(500);
     Serial.print(".");
     n++;
-    if(n>10) break;
   }
-  i++;
+  if(i < sizeof(ssid)/4){
+    i++;
+  }
+   else i = 0;
  }
  String s = "Connected to "+String(ssid[i-1]);
    Serial.println(s);
@@ -104,6 +106,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
      receive_buffer[i-1] = (uint8_t) payload[i];
      Serial.println(receive_buffer[i-1]);
   }
+  if(receive_buffer[0] < 50) receive_buffer[0] = receive_buffer[0]*10;
+  
   irsend.sendRaw_P(receive_buffer,length-1,38);
 }
 
@@ -120,9 +124,10 @@ void reconnect() {
       // Once connected, publish an announcement…
       //client->publish("Topic", "msg");
       // … and resubscribe
+      client->subscribe("AC");
       client->subscribe("TV");
       client->subscribe("Fan");
-      client->subscribe("Customs");
+      client->subscribe("CUSTOM");
       //client->subscribe("Learn");
     } else {
       //Serial.print("failed, rc = ");
@@ -176,7 +181,7 @@ void sendUI(uint8_t *code_buffer)
   uint16_t vol = 0;
   uint16_t amp = 0;
   int bit_cnt = 0;
-  for(int i = 4; i <= 68; i+=2)
+  for(int i = 5; i <= 68; i+=2)
   {
     if(bit_cnt < 16)
     {
@@ -210,7 +215,7 @@ void loop() {
         code_buffer[i] = results.rawbuf[i] & 0xff;
         Serial.println(code_buffer[i]);
      }
-    if(code_buffer[3] > 200) sendUI(code_buffer);
+    if(code_buffer[3] > 180) sendUI(code_buffer);
     else
     {
     Serial.println(IRprotocol[results.decode_type]);
